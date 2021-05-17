@@ -29,6 +29,7 @@ class BookController extends Controller
             'isbn' => 'required',
             'bookname' => 'required',
             'author' => 'required',
+            'category' => 'required',
             'publisher' => 'required',
             'publish_date' => 'required',
         ]);

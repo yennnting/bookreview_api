@@ -14,6 +14,7 @@ class Book extends Model
         'bookname',
         'author',
         'description',
+        'category',
         'publisher',
         'publish_date',
         'image'
