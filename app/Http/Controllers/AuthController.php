@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
@@ -12,7 +13,7 @@ class AuthController extends Controller
         $fields = $request->validate([
             'name' => 'required|string',
             'region' => 'required',
-            'email' => 'required|string|unique:users,email',
+            'email' => 'required|email|unique:users,email',
             'password' => 'required|string|confirmed'
         ]);
 
@@ -30,12 +31,12 @@ class AuthController extends Controller
             'token' => $token
         ];
 
-        return response($response, 201);
+        return response($response, Response::HTTP_CREATED);
     }
 
     public function login(Request $request) {
         $fields = $request->validate([
-            'email' => 'required|string',
+            'email' => 'required|email',
             'password' => 'required|string'
         ]);
 
@@ -46,7 +47,7 @@ class AuthController extends Controller
         if (!$user || !Hash::check($fields['password'], $user->password)) {
             return response([
                 'message' => 'Bad creds'
-            ], 401);
+            ], Response::HTTP_UNAUTHORIZED);
         }
 
         $token = $user->createToken('myapptoken')->plainTextToken;
