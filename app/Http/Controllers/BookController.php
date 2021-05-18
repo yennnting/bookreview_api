@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use Illuminate\Http\Request;
+use Intervention\Image\Facades\Image;
 
 class BookController extends Controller
 {
@@ -25,16 +26,31 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $bookfieds = $request->validate([
             'isbn' => 'required',
             'bookname' => 'required',
             'author' => 'required',
             'category' => 'required',
             'publisher' => 'required',
             'publish_date' => 'required',
+            'image' => ''
         ]);
 
-        return Book::create($request->all());
+        if (request('image')) {
+            $imagePath = request('image')->store('books', 'public');
+
+            $image = Image::make(public_path("storage/{$imagePath}"));
+            $image->save();
+
+            $imageArray = ['image' => $imagePath];
+        }
+
+        $book = Book::create(array_merge(
+            $bookfieds,
+            $imageArray ?? []
+        ));
+
+        return $book;
     }
 
     /**
