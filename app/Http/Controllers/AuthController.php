@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Intervention\Image\Facades\Image;
 use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
-    public function register(Request $request) {
+    public function register(Request $request)
+    {
         $fields = $request->validate([
             'name' => 'required|string',
             'region' => 'required',
@@ -34,7 +36,8 @@ class AuthController extends Controller
         return response($response, Response::HTTP_CREATED);
     }
 
-    public function login(Request $request) {
+    public function login(Request $request)
+    {
         $fields = $request->validate([
             'email' => 'required|email',
             'password' => 'required|string'
@@ -57,13 +60,37 @@ class AuthController extends Controller
             'token' => $token
         ];
 
-        return response($response, 201);
+        return response($response, Response::HTTP_CREATED);
     }
-    public function logout(Request $request) {
+
+    public function logout(Request $request)
+    {
         auth()->user()->tokens()->delete();
 
         return [
             'message' => 'Logged out.'
         ];
     }
+
+    public function imageUpload(Request $request, $id)
+    {
+        request()->validate([
+            'image' => 'image',
+        ]);
+
+        if ($request->has('image')) {
+            $imagePath = request('image')->store('profile', 'public');
+
+            $image = Image::make(public_path("storage/{$imagePath}"));
+            $image->save();
+        }
+
+        $user = User::find($id);
+        $user->update([
+            'image' => $imagePath,
+        ]);
+
+        return $user;
+    }
+
 }
