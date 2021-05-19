@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
+    CONST BASE_STORAGE_URL = "http://52.196.162.105/storage/";
+
     public function register(Request $request)
     {
         $fields = $request->validate([
@@ -87,7 +89,7 @@ class AuthController extends Controller
 
         $user = User::find($id);
         $user->update([
-            'image' => $imagePath,
+            'image' => self::BASE_STORAGE_URL . $imagePath,
         ]);
 
         return $user;

@@ -8,6 +8,8 @@ use Intervention\Image\Facades\Image;
 
 class BookController extends Controller
 {
+    CONST BASE_STORAGE_URL = "http://52.196.162.105/storage/";
+
     /**
      * Display a listing of the resource.
      *
@@ -42,7 +44,7 @@ class BookController extends Controller
             $image = Image::make(public_path("storage/{$imagePath}"));
             $image->save();
 
-            $imageArray = ['image' => $imagePath];
+            $imageArray = ['image' => self::BASE_STORAGE_URL . $imagePath];
         }
 
         $book = Book::create(array_merge(
