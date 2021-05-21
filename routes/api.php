@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\CommentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,19 +24,19 @@ Route::post('/login', [AuthController::class, 'login']);
 
 // book
 Route::get('/books', [BookController::class, 'index']);
-Route::get('/books/{id}', [BookController::class, 'show']);
-Route::get('/books/search/{name}', [BookController::class, 'search']);
-
+Route::get('/books/{book_id}', [BookController::class, 'show']);
+Route::get('/books/search/{book_name}', [BookController::class, 'search']);
 
 // protect routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
     // auth
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::put('/profile/{id}/photo', [AuthController::class, 'imageUpload']);
+    Route::put('/profile/{user_id}/photo', [AuthController::class, 'imageUpload']);
+    Route::post('/books/{book_id}/comment', [CommentController::class, 'store']);
     // book
     Route::post('/books', [BookController::class, 'store']);
-    Route::put('/books/{id}', [BookController::class, 'update']);
-    Route::delete('/books/{id}', [BookController::class, 'destroy']);
+    Route::put('/books/{book_id}', [BookController::class, 'update']);
+    Route::delete('/books/{book_id}', [BookController::class, 'destroy']);
 });
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {

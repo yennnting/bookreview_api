@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
+use Symfony\Component\HttpFoundation\Response;
 
 class BookController extends Controller
 {
@@ -35,6 +36,7 @@ class BookController extends Controller
             'category' => 'required',
             'publisher' => 'required',
             'publish_date' => 'required',
+            'description' => '',
             'image' => ''
         ]);
 
@@ -63,7 +65,12 @@ class BookController extends Controller
      */
     public function show($id)
     {
-        return Book::find($id);
+        $book = Book::find($id);
+        $comments = $book->comments;
+        foreach ($comments as $comment) {
+            $comment->user;
+        }
+        return response()->json($book, Response::HTTP_OK);
     }
 
     /**
