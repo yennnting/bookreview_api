@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\comment;
+use App\Models\Comment;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
