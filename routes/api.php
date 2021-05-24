@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -31,12 +32,14 @@ Route::get('/books/search/{book_name}', [BookController::class, 'search']);
 Route::group(['middleware' => ['auth:sanctum']], function () {
     // auth
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::put('/profile/{user_id}/photo', [AuthController::class, 'imageUpload']);
-    Route::post('/books/{book_id}/comment', [CommentController::class, 'store']);
+    // profile
+    Route::get('/profile/{user_id}', [ProfileController::class, 'show']);
+    Route::put('/profile/{user_id}/photo', [ProfileController::class, 'imageUpload']);
     // book
     Route::post('/books', [BookController::class, 'store']);
     Route::put('/books/{book_id}', [BookController::class, 'update']);
     Route::delete('/books/{book_id}', [BookController::class, 'destroy']);
+    Route::post('/books/{book_id}/comment', [CommentController::class, 'store']);
 });
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {

@@ -5,13 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Intervention\Image\Facades\Image;
 use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
-    CONST BASE_STORAGE_URL = "http://52.196.162.105/storage/";
-
     public function register(Request $request)
     {
         $fields = $request->validate([
@@ -72,27 +69,6 @@ class AuthController extends Controller
         return [
             'message' => 'Logged out.'
         ];
-    }
-
-    public function imageUpload(Request $request, $id)
-    {
-        request()->validate([
-            'image' => 'image',
-        ]);
-
-        if ($request->has('image')) {
-            $imagePath = request('image')->store('profile', 'public');
-
-            $image = Image::make(public_path("storage/{$imagePath}"));
-            $image->save();
-        }
-
-        $user = User::find($id);
-        $user->update([
-            'image' => self::BASE_STORAGE_URL . $imagePath,
-        ]);
-
-        return $user;
     }
 
 }
