@@ -21,7 +21,7 @@ class BookController extends Controller
     {
         $books = DB::table('books')
             ->selectRaw('books.*, AVG(comments.rate) AS average_rate')
-            ->join('comments','books.id','=','comments.bookID')
+            ->leftJoin('comments','books.id','=','comments.bookID')
             ->groupBy('books.id')
             ->orderByDesc('average_rate')
             ->get();
