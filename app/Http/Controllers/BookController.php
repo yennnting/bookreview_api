@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Intervention\Image\Facades\Image;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -18,7 +19,14 @@ class BookController extends Controller
      */
     public function index()
     {
-        return Book::all();
+        $books = DB::table('books')
+            ->selectRaw('books.*, AVG(comments.rate) AS average_rate')
+            ->join('comments','books.id','=','comments.bookID')
+            ->groupBy('books.id')
+            ->orderByDesc('average_rate')
+            ->get();
+
+        return $books;
     }
 
     /**
