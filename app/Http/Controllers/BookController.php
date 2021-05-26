@@ -116,4 +116,21 @@ class BookController extends Controller
     {
         return Book::where('bookname', 'like', '%'.$name.'%')->get();
     }
+
+    /**
+     * Search for a name.
+     *
+     * @param  string $name
+     * @return \Illuminate\Http\Response
+     */
+    public function categorySearch($id)
+    {
+        $books = DB::table('books')
+            ->select('books.*')
+            ->join('categories','books.category','=','categories.category_name')
+            ->where('categories.id', $id)
+            ->get();
+
+        return $books;
+    }
 }
