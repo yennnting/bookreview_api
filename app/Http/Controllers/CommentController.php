@@ -40,12 +40,16 @@ class CommentController extends Controller
             'rate' => 'required|numeric|between:1,5'
         ]);
 
-        $comment = Comment::create([
-            'userID' => auth()->id(),
-            'bookID' => $bookid,
-            'rate' => $request->rate,
-            'comment' => $request->comment,
-        ]);
+        if (!Comment::where('userID', auth()->id())->where('bookID', $bookid)->exists()) {
+            $comment = Comment::create([
+                'userID' => auth()->id(),
+                'bookID' => $bookid,
+                'rate' => $request->rate,
+                'comment' => $request->comment,
+            ]);
+        } else {
+            return response('You have already commented this book.', Response::HTTP_BAD_REQUEST);
+        }
 
         $response = [
             'comment' => $comment,
@@ -83,9 +87,16 @@ class CommentController extends Controller
      * @param  \App\Models\comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, comment $comment)
+    public function update(Request $request, $id)
     {
-        //
+        $comment = Comment::findOrFail($id);
+        $content = $request->validate([
+            'rate' => 'required|numeric|between:1,5',
+            'comment' => '',
+        ]);
+
+        auth()->user()->$comment->update($content);
+        return $comment;
     }
 
     /**
@@ -94,8 +105,12 @@ class CommentController extends Controller
      * @param  \App\Models\comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function destroy(comment $comment)
+    public function destroy($id)
     {
-        //
+        if (Comment::destroy($id)) {
+            return response("The comment is deleted.", Response::HTTP_OK);
+        } else {
+            return response("The comment isn't exist.", Response::HTTP_NOT_FOUND);
+        }
     }
 }

@@ -73,6 +73,8 @@ class ProfileController extends Controller
 
             $image = Image::make(public_path("storage/{$imagePath}"));
             $image->save();
+        } else {
+            return response('Fetch image failed', Response::HTTP_BAD_REQUEST);
         }
 
         $user = User::find($id);

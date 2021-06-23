@@ -41,6 +41,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::put('/books/{book_id}', [BookController::class, 'update']);
     Route::delete('/books/{book_id}', [BookController::class, 'destroy']);
     Route::post('/books/{book_id}/comment', [CommentController::class, 'store']);
+    Route::put('/comments/{comment_id}', [CommentController::class, 'update']);
+    Route::delete('/comments/{comment_id}', [CommentController::class, 'destroy']);
 });
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
