@@ -95,7 +95,7 @@ class CommentController extends Controller
             'comment' => '',
         ]);
 
-        auth()->user()->$comment->update($content);
+        $comment->update($content);
         return $comment;
     }
 
