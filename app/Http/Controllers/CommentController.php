@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -47,15 +48,23 @@ class CommentController extends Controller
                 'rate' => $request->rate,
                 'comment' => $request->comment,
             ]);
+
+            $user = User::find(auth()->id());
+            $old_point = $user->getOriginal('point');
+            $user->update([
+               'point' => $old_point + 5,
+            ]);
+
         } else {
             return response('You have already commented this book.', Response::HTTP_BAD_REQUEST);
         }
 
         $response = [
             'comment' => $comment,
+            'user' => $user
         ];
 
-        return response($response, Response::HTTP_CREATED);
+        return response()->json($response, Response::HTTP_CREATED);
     }
 
     /**
