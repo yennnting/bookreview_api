@@ -29,7 +29,10 @@ class ProfileController extends Controller
      */
     public function show($id)
     {
-        $user = User::find($id);
+        $user = User::findOrFail($id);
+        if (auth()->id() != $id) {
+            return response('Unauthorized', Response::HTTP_FORBIDDEN);
+        }
         $comments = $user->comments;
         $count = 0;
         foreach ($comments as $comment) {
@@ -70,6 +73,10 @@ class ProfileController extends Controller
 
     public function imageUpload(Request $request, $id)
     {
+        if (auth()->id() != $id) {
+            return response('Unauthorized', Response::HTTP_FORBIDDEN);
+        }
+
         request()->validate([
             'image' => 'image',
         ]);

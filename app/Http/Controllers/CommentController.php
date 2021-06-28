@@ -94,6 +94,7 @@ class CommentController extends Controller
     public function update(Request $request, $id)
     {
         $comment = Comment::findOrFail($id);
+        $this->authorize('update', $comment);
         $content = $request->validate([
             'rate' => 'required|numeric|between:1,5',
             'comment' => '',
@@ -111,6 +112,8 @@ class CommentController extends Controller
      */
     public function destroy($id)
     {
+        $comment = Comment::findOrFail($id);
+        $this->authorize('delete', $comment);
         if (Comment::destroy($id)) {
             return response("The comment is deleted.", Response::HTTP_OK);
         } else {
