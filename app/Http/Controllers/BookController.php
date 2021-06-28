@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Intervention\Image\Facades\Image;
@@ -74,11 +75,16 @@ class BookController extends Controller
     public function show($id)
     {
         $book = Book::find($id);
+        $avg_rate = Comment::where('bookID', $id)->avg('rate');
+
         $comments = $book->comments;
         foreach ($comments as $comment) {
             $comment->user;
         }
-        return response()->json($book, Response::HTTP_OK);
+
+        $response = ['book' => $book, 'avg_rate' => $avg_rate];
+
+        return response()->json($response, Response::HTTP_OK);
     }
 
     /**
@@ -114,7 +120,14 @@ class BookController extends Controller
      */
     public function search($name)
     {
-        return Book::where('bookname', 'like', '%'.$name.'%')->get();
+        $result = Book::where('bookname', 'like', '%'.$name.'%')
+            ->orWhere('author', 'like', '%'.$name.'%');
+
+        if ($result->exists()) {
+            return response()->json($result->get(), Response::HTTP_OK);
+        } else {
+            return response('No results.', Response::HTTP_OK);
+        }
     }
 
     /**
