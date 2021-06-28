@@ -22,7 +22,7 @@ class Book extends Model
 
     public function comments()
     {
-        return $this->hasMany(Comment::class,'bookID','id');
+        return $this->hasMany(Comment::class,'bookID','id')->latest();
     }
 
 }
