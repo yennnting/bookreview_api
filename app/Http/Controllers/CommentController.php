@@ -59,12 +59,7 @@ class CommentController extends Controller
             return response('You have already commented this book.', Response::HTTP_BAD_REQUEST);
         }
 
-        $response = [
-            'comment' => $comment,
-            'user' => $user
-        ];
-
-        return response()->json($response, Response::HTTP_CREATED);
+        return response()->json($comment, Response::HTTP_CREATED);
     }
 
     /**
