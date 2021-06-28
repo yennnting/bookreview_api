@@ -22,7 +22,8 @@ class AuthController extends Controller
             'name' => $fields['name'],
             'region' => $fields['region'],
             'email' => $fields['email'],
-            'password' => bcrypt($fields['password'])
+            'password' => bcrypt($fields['password']),
+            'image' => 'http://52.196.162.105/storage/profile/default.jpeg'
         ]);
 
         $token = $user->createToken('myapptoken')->plainTextToken;

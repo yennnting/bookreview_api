@@ -36,6 +36,12 @@ class ProfileController extends Controller
             $comment->book;
             $count++;
         }
+
+        if ($user->image == null)
+        {
+            $user->image = self::BASE_STORAGE_URL . 'profile/default.jpeg';
+        }
+
         return response()->json(['user' => $user, 'countOfComments' => $count], Response::HTTP_OK);
     }
 
