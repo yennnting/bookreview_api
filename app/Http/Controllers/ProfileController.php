@@ -30,9 +30,6 @@ class ProfileController extends Controller
     public function show($id)
     {
         $user = User::findOrFail($id);
-        if (auth()->id() != $id) {
-            return response('Unauthorized', Response::HTTP_FORBIDDEN);
-        }
         $comments = $user->comments;
         $count = 0;
         foreach ($comments as $comment) {
@@ -40,8 +37,7 @@ class ProfileController extends Controller
             $count++;
         }
 
-        if ($user->image == null)
-        {
+        if ($user->image == null) {
             $user->image = self::BASE_STORAGE_URL . 'profile/default.jpeg';
         }
 
