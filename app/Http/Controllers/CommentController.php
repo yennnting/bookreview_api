@@ -38,7 +38,7 @@ class CommentController extends Controller
     public function store(Request $request, $bookid)
     {
         $request->validate([
-            'rate' => 'required|numeric|between:1,5'
+            'rate' => 'required|numeric|between:0.5,5'
         ]);
 
         if (!Comment::where('userID', auth()->id())->where('bookID', $bookid)->exists()) {
