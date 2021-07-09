@@ -96,7 +96,7 @@ class CommentController extends Controller
         $comment = Comment::findOrFail($id);
         $this->authorize('update', $comment);
         $content = $request->validate([
-            'rate' => 'required|numeric|between:1,5',
+            'rate' => 'required|numeric|between:0.5,5',
             'comment' => '',
         ]);
 
